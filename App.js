@@ -1,5 +1,5 @@
 import React, {useMemo, useState} from 'react';
-import {StatusBar} from 'react-native';
+import {StatusBar, YellowBox} from 'react-native';
 import {
   Provider as PaperProvider,
   DarkTheme as DarkThemePaper,
@@ -12,6 +12,8 @@ import {
 } from '@react-navigation/native';
 import Navigation from './src/navigation/Navigation';
 import PreferencesContext from './src/context/PreferencesContext';
+
+YellowBox.ignoreWarnings(['Calling `getNode()`']);
 
 export default function App() {
   const [theme, setTheme] = useState('dark');
