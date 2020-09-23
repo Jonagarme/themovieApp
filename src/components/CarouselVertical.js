@@ -31,7 +31,7 @@ export default function CarouselVertical(props) {
 
 function RenderItem(props) {
   const {data, navigation} = props;
-  const {title, poster_path, genre_ids} = data.item;
+  const {id, title, poster_path, genre_ids} = data.item;
   const [genres, setGenres] = useState(null);
   const imageUrl = `${BASE_PATH_IMG}/w500${poster_path}`;
 
@@ -41,8 +41,12 @@ function RenderItem(props) {
     });
   }, []);
 
+  const onNavigation = () => {
+    navigation.navigate('movie', {id});
+  };
+
   return (
-    <TouchableWithoutFeedback onPress={() => console.log('HOLA')}>
+    <TouchableWithoutFeedback onPress={onNavigation}>
       <View style={styles.card}>
         <Image style={styles.image} source={{uri: imageUrl}} />
         <Title style={styles.title}>{title}</Title>
