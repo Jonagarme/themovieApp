@@ -26,7 +26,7 @@ export default function Movie(props) {
 
   return (
     <>
-      <ScrollView>
+      <ScrollView showsHorizontalScrollIndicator={false}>
         <MovieImage posterPath={movie.poster_path} />
         <MovieTrailer setShowVideo={setShowVideo} />
         <MovieTitle movie={movie} />
@@ -34,6 +34,10 @@ export default function Movie(props) {
           voteCount={movie.vote_count}
           voteAverage={movie.vote_average}
         />
+        <Text style={styles.overview}>{movie.overview}</Text>
+        <Text style={[styles.overview, {marginBottom: 30}]}>
+          Fecha de lanzamiento: {movie.release_date}
+        </Text>
       </ScrollView>
       <ModalVideo show={showVideo} setShow={setShowVideo} idMovie={id} />
     </>
