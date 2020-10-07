@@ -2,9 +2,13 @@ import React, {useState, useEffect} from 'react';
 import {View, Image, StyleSheet, ScrollView} from 'react-native';
 import {IconButton, Text, Title} from 'react-native-paper';
 import {map} from 'lodash';
+import {Rating} from 'react-native-ratings';
 import {getMovieByIdApi} from '../api/movies';
 import {BASE_PATH_IMG} from '../utils/constants';
 import ModalVideo from '../components/ModalVideo';
+import usePreferences from '../hooks/usePreferences';
+import starDark from '../assets/png/starDark.png';
+import starLight from '../assets/png/starLight.png';
 
 export default function Movie(props) {
   const {route} = props;
@@ -26,6 +30,10 @@ export default function Movie(props) {
         <MovieImage posterPath={movie.poster_path} />
         <MovieTrailer setShowVideo={setShowVideo} />
         <MovieTitle movie={movie} />
+        <MovieRating
+          voteCount={movie.vote_count}
+          voteAverage={movie.vote_average}
+        />
       </ScrollView>
       <ModalVideo show={showVideo} setShow={setShowVideo} idMovie={id} />
     </>
@@ -74,6 +82,27 @@ function MovieTitle(props) {
           </Text>
         ))}
       </View>
+    </View>
+  );
+}
+
+function MovieRating(props) {
+  const {voteCount, voteAverage} = props;
+  const media = voteAverage / 2;
+  const {theme} = usePreferences();
+
+  return (
+    <View style={styles.viewRating}>
+      <Rating
+        type="custom"
+        ratingImage={theme === 'dark' ? starDark : starLight}
+        ratingColor="#ffc205"
+        ratingBackgroundColor={theme === 'dark' ? '#192734' : '#f0f0f0'}
+        startingValue={media}
+        style={{marginRight: 15}}
+      />
+      <Text style={{fontSize: 16, marginRight: 5}}>{media}</Text>
+      <Text style={{fontSize: 12, color: '#8697a5'}}>{voteCount} votos</Text>
     </View>
   );
 }
