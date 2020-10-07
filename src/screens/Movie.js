@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {View, Image, StyleSheet, ScrollView} from 'react-native';
 import {IconButton, Text, Title} from 'react-native-paper';
+import {map} from 'lodash';
 import {getMovieByIdApi} from '../api/movies';
 import {BASE_PATH_IMG} from '../utils/constants';
 import ModalVideo from '../components/ModalVideo';
@@ -24,6 +25,7 @@ export default function Movie(props) {
       <ScrollView>
         <MovieImage posterPath={movie.poster_path} />
         <MovieTrailer setShowVideo={setShowVideo} />
+        <MovieTitle movie={movie} />
       </ScrollView>
       <ModalVideo show={showVideo} setShow={setShowVideo} idMovie={id} />
     </>
@@ -55,6 +57,23 @@ function MovieTrailer(props) {
         style={styles.play}
         onPress={() => setShowVideo(true)}
       />
+    </View>
+  );
+}
+
+function MovieTitle(props) {
+  const {movie} = props;
+
+  return (
+    <View style={styles.viewInfo}>
+      <Title>{movie.title}</Title>
+      <View style={styles.viewGenres}>
+        {map(movie.genres, (genre) => (
+          <Text key={genre.id} style={styles.genre}>
+            {genre.name}
+          </Text>
+        ))}
+      </View>
     </View>
   );
 }
