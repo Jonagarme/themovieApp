@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, ScrollView, Image} from 'react-native';
-import {Text, Title} from 'react-native-paper';
+import {Text, Title, Button} from 'react-native-paper';
 import {map} from 'lodash';
 import {getPopularMoviesApi} from '../api/movies';
 import {BASE_PATH_IMG} from '../utils/constants';
@@ -13,19 +13,40 @@ import starLight from '../assets/png/starLight.png';
 export default function Popular(props) {
   const {navigation} = props;
   const [movies, setMovies] = useState(null);
+  const [showBtnMore, setShowBtnMore] = useState(true);
+  const [page, setPage] = useState(1);
   const {theme} = usePreferences();
 
   useEffect(() => {
-    getPopularMoviesApi(1).then((response) => {
-      setMovies(response.results);
+    getPopularMoviesApi(page).then((response) => {
+      const totalPages = response.total_pages;
+      if (page < totalPages) {
+        if (!movies) {
+          setMovies(response.results);
+        } else {
+          setMovies([...movies, ...response.results]);
+        }
+      } else {
+        setShowBtnMore(false);
+      }
     });
-  }, []);
+  }, [page]);
 
   return (
     <ScrollView>
       {map(movies, (movie, index) => (
         <Movie key={index} movie={movie} theme={theme} />
       ))}
+      {showBtnMore && (
+        <Button
+          mode="contained"
+          contentStyle={styles.lodadMoreContainer}
+          style={styles.loadMore}
+          labelStyle={{color: theme === 'dark' ? '#fff' : '#000'}}
+          onPress={() => setPage(page + 1)}>
+          Cargar mas...
+        </Button>
+      )}
     </ScrollView>
   );
 }
@@ -43,7 +64,7 @@ function Movie(props) {
           }
         />
       </View>
-      <View>
+      <View style={{margin: 15}}>
         <Title>{title}</Title>
         <Title>{release_date}</Title>
         <MovieRating
