@@ -90,7 +90,7 @@ export function getPopularMoviesApi(page = 1) {
     });
 }
 
-/* export function searchMoviesApi(search) {
+export function searchMoviesApi(search) {
   const url = `${API_HOST}/search/movie?api_key=${API_KEY}&language=${LANG}&query=${search}`;
 
   return fetch(url)
@@ -101,4 +101,3 @@ export function getPopularMoviesApi(page = 1) {
       return result;
     });
 }
- */

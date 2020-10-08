@@ -19,31 +19,66 @@ export default function News(props) {
   const {navigation} = props;
   const [movies, setMovies] = useState(null);
   const [page, setPage] = useState(1);
+  const [showBtnMore, setShowBtnMore] = useState(true);
+  const {theme} = usePreferences();
 
   useEffect(() => {
     getNewsMovieApi(page).then((response) => {
-      setMovies(response.results);
+      const totalPages = response.total_pages;
+      if (page < totalPages) {
+        if (!movies) {
+          setMovies(response.results);
+        } else {
+          setMovies([...movies, ...response.results]);
+        }
+      } else {
+        setShowBtnMore(false);
+      }
     });
-  }, []);
+  }, [page]);
 
   return (
     <ScrollView>
-      <View>
+      <View style={styles.container}>
         {map(movies, (movie, index) => (
-          <Movie key={index} movie={movie} />
+          <Movie key={index} movie={movie} navigation={navigation} />
         ))}
       </View>
+      {showBtnMore && (
+        <Button
+          mode="contained"
+          contentStyle={styles.loadMoreContainer}
+          style={styles.loadMore}
+          labelStyle={{color: theme === 'dark' ? '#fff' : '#000'}}
+          onPress={() => setPage(page + 1)}>
+          Cargar mas...
+        </Button>
+      )}
     </ScrollView>
   );
 }
 
 function Movie(props) {
-  const {movie} = props;
-  const {title} = movie;
+  const {movie, navigation} = props;
+  const {id, title, poster_path} = movie;
+
+  const goMovie = () => {
+    navigation.navigate('movie', {id});
+  };
+
   return (
-    <View>
-      <Text>{title}</Text>
-    </View>
+    <TouchableWithoutFeedback onPress={goMovie}>
+      <View style={styles.movie}>
+        {poster_path ? (
+          <Image
+            style={styles.image}
+            source={{uri: `${BASE_PATH_IMG}/w500${poster_path}`}}
+          />
+        ) : (
+          <Text>{title}</Text>
+        )}
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 
