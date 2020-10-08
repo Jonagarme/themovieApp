@@ -89,3 +89,16 @@ export function getPopularMoviesApi(page = 1) {
       return result;
     });
 }
+
+/* export function searchMoviesApi(search) {
+  const url = `${API_HOST}/search/movie?api_key=${API_KEY}&language=${LANG}&query=${search}`;
+
+  return fetch(url)
+    .then((response) => {
+      return response.json();
+    })
+    .then((result) => {
+      return result;
+    });
+}
+ */
